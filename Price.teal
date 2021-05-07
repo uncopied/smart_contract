@@ -1,0 +1,42 @@
+#pragma version 2
+int 0
+txn ApplicationID
+==
+bnz creation
+
+global GroupSize
+int 3
+>=
+byte "Price"
+app_global_get
+gtxn 0 Amount
+==
+&&
+byte "Creator"
+app_global_get
+gtxn 1 Sender
+==
+&&
+gtxn 2 Receiver
+gtxn 1 Sender
+==
+&&
+
+
+creation:
+byte "Creator"
+txn Sender
+app_global_put
+byte "Price"
+txna ApplicationArgs 0
+btoi
+app_global_put
+
+global GroupSize
+int 2
+>=
+gtxn 0 TypeEnum
+int acfg
+==
+&&
+return
