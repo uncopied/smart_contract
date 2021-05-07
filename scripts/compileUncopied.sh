@@ -1,3 +1,3 @@
 #!/bin/bash
 
-../../../node/goal clerk compile ./uncopied.teal
+../../../node/goal clerk compile ../contracts/uncopied.teal
