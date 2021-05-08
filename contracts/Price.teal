@@ -1,4 +1,4 @@
-#pragma version 2
+#pragma version 3
 int 0
 txn ApplicationID
 ==
@@ -6,21 +6,22 @@ bnz creation
 
 global GroupSize
 int 3
->=
+==
 byte "Price"
 app_global_get
-gtxn 0 Amount
+gtxn 1 Amount
 ==
 &&
 byte "Creator"
 app_global_get
-gtxn 1 Sender
+gtxn 0 AssetSender
 ==
 &&
-gtxn 2 Receiver
-gtxn 1 Sender
+gtxn 1 Receiver
+gtxn 0 AssetSender
 ==
 &&
+return
 
 
 creation:
@@ -28,7 +29,7 @@ byte "Creator"
 txn Sender
 app_global_put
 byte "Price"
-txna ApplicationArgs 0
+gtxna 1 ApplicationArgs 0
 btoi
 app_global_put
 
