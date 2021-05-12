@@ -1,5 +1,5 @@
-# smart_contract
-This is an explanation of the  smart contract for the Uncopied project. Uncopied is an NFT marketplace whose vision is to make  original truely unique, with physical and digitally immutable certificates of authenticity, expertise, inventory that will outlive us.
+# Uncopied Smart Contract
+This is an explanation of the  smart contract for the Uncopied project. Uncopied is an NFT marketplace whose vision is to make  original truely unique, with physical and digitally immutable certificates of authenticity, expertise and inventory that will outlive us.
 
 # What does this contract Achieve
 The purpose of this contract is to enable royalty transactions for uncopied and to also guide the creation of NFTs, for this purpose, the Algorand blockchain and the TEAL(Transaction Execution Approval Language) has been chosen as the desired Blockchain and smart contract language.
