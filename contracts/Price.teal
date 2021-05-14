@@ -4,6 +4,17 @@ txn ApplicationID
 ==
 bnz creation
 
+int UpdateApplication
+txn OnCompletion
+==
+bnz updateApp
+
+
+int DeleteApplication
+txn OnCompletion
+==
+bnz DeleteApp
+
 global GroupSize
 int 3
 ==
@@ -40,4 +51,24 @@ gtxn 0 TypeEnum
 int acfg
 ==
 &&
+gtxn 0 ConfigAssetDefaultFrozen
+int 1
+==
+&&
 return
+
+updateApp:
+byte "Creator"
+app_global_get
+txn Sender
+==
+return
+
+DeleteApp:
+byte "Creator"
+app_global_get
+txn Sender
+==
+return
+
+
