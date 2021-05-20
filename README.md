@@ -1,18 +1,18 @@
 # Uncopied Smart Contract (Royalties)
-This is an explanation of the smart contract PROTOTYPE for the Uncopied project. Uncopied intends to issue secure 'proof of provenance' for physical and digital art (NFTs). UNCOPIED's  vision is to make original truely unique, with physical and digitally immutable certificates of authenticity, expertise and inventory that will outlive us. The NFTs can be traded on any Algorand NFT marketplace (DEX) based on agreed standards for asset identification and metadata. This prototype is to explore how we can manage royalties ("Droit de Suite") on initial NFT transaction, but also on all future transactions. 
+This is an explanation of the smart contract PROTOTYPE for the Uncopied project. Uncopied intends to issue secure 'proof of provenance' for physical and digital art (NFTs). UNCOPIED's  vision is to make original art truely unique, with physical and digitally immutable certificates of authenticity, expertise and inventory that will outlive us. The NFTs can be traded on any Algorand NFT marketplace (DEX) based on agreed standards for asset identification and metadata. This prototype is to explore how we can manage royalties ("Droit de Suite") on initial NFT transaction, but also on all future transactions. THIS IS NOT PRODUCTION-READY.
 
 # What does this contract Achieve
-The purpose of this contract is to enable royalty transactions for uncopied and to also guide the creation of NFTs, for this purpose, the Algorand blockchain and the TEAL(Transaction Execution Approval Language) has been chosen as the desired Blockchain and smart contract language.
+The purpose of this contract is to enable royalty transactions for Uncopied and to also guide the creation of NFTs, for this purpose, the Algorand blockchain and the TEAL(Transaction Execution Approval Language) has been chosen as the desired Blockchain and smart contract language.
 
 # Things to understand before proceeding
-- A royalty transaction is a transactionthat allows a creator of a content to be rewarded for his content by a buyer of such content, in our case, the content is the NFT.
+- A royalty transaction is a transaction that allows a creator of a content to be rewarded for his content by a buyer of such content, in our case, the content is the NFT.
 
-- NFTs are created as Assets under the Algorand Blockchain
+- NFTs are created as ASA (Algorand Standard Assets) under the Algorand public blockchain.
 
 - Atomic transactions are transactions that are grouped together such that if one fails, all fail.
 
 # How do we achieve this?
-Many a time while trying to solve similar problems by leveraging the Algorand blockchain, a single transaction is rarely enough, and this also applies to our present problem, we are going to solve this particular problem using an Atomic transaction that  contains three transactions
+We are going to solve this particular problem using an Atomic transaction that contains three transactions
 
 ## What are this 3 transactions?
 1. The first transaction is an Asset Transfer Transaction that transfers the NFT(Asset) from the creator to the buyer of the NFT
