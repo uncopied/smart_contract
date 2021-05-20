@@ -18,9 +18,35 @@ bnz DeleteApp
 global GroupSize
 int 3
 ==
+bnz txSentFromCreator
+
+global GroupSize
+int 4
+==
+byte "Creator"
+app_global_get
+gtxn 0 Receiver
+==
+&&
+gtxn 1 Amount
+gtxn 0 Amount
+/
+byte "Percent"
+app_global_get
+==
+&&
+return
+
+
+
+txSentFromCreator:
 byte "Price"
 app_global_get
 gtxn 1 Amount
+==
+&&
+gtxn 0 Amount
+int 1
 ==
 &&
 byte "Creator"
@@ -43,6 +69,11 @@ byte "Price"
 gtxna 1 ApplicationArgs 0
 btoi
 app_global_put
+byte "Percent"
+gtxna 1 ApplicationArgs 1
+btoi
+app_global_put
+
 
 global GroupSize
 int 2
