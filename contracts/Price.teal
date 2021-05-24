@@ -15,20 +15,23 @@ txn OnCompletion
 ==
 bnz DeleteApp
 
-global GroupSize
-int 3
+byte "Creator"
+app_global_get
+gtxn 0 AssetSender
 ==
 bnz txSentFromCreator
 
 global GroupSize
-int 4
+int 3
 ==
 byte "Creator"
 app_global_get
 gtxn 0 Receiver
 ==
 &&
-gtxn 1 Amount
+gtxn 1 AssetAmount
+int 1000000
+*
 gtxn 0 Amount
 /
 byte "Percent"
@@ -44,8 +47,7 @@ byte "Price"
 app_global_get
 gtxn 1 Amount
 ==
-&&
-gtxn 0 Amount
+gtxn 0 AssetAmount
 int 1
 ==
 &&
