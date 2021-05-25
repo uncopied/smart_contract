@@ -29,10 +29,16 @@ app_global_get
 gtxn 0 Receiver
 ==
 &&
+gtxn 0 Amount
+int 100
+*
+store 10
 gtxn 1 AssetAmount
 int 1000000
 *
-gtxn 0 Amount
+store 11
+load 10
+load 11
 /
 byte "Percent"
 app_global_get
