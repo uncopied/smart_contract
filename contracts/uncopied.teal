@@ -4,13 +4,13 @@ int 10000
 <=
 global GroupSize
 int 3
-==
+>=
 &&
 gtxn 2 TypeEnum
 int appl
 ==
 &&
 gtxn 2 ApplicationID
-int 15953480
+int 15965546
 ==
 &&
