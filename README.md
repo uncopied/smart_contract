@@ -189,7 +189,7 @@ return
 
 We first make sure that the transactions are at least 3, then we check that the creator of the NFT is the receiver in the first transaction, we further take the amount in the first transaction, multipky it by 100 and divide it by the asset amount multiplied by 1000000 then check if its equal to the percent set by the creator and allow the contract call if this is the case or reject the transaction.
 
-A simple clarification: suppose a creator sets P as the royalties percent he will receive on a transfer of a single unit of an NFT N then the function f(N) that a buyer should pay to the Creator when transferring an assset is (P/100)*N, lets call f(N) Y in our case, this means Y = (P/100)*N. This means that P should always be equal to (Y*100)/N; thats why in the code above, we multiply the amount(Y) paid to the creator by 100 and divide it by the amount(N) of NFT units transferred, but notice that we convert the units of NFT to microalgos by multiplying it by 1000000 since the amount(Y) is already in microalgos
+A simple clarification: suppose a creator sets `P` as the royalties percent he will receive on a transfer of a single unit of an NFT `N` then the function f(N) that a buyer should pay to the Creator when transferring an assset is `(P/100)*N`, lets call f(N) `Y` in our case, this means `Y = (P/100)*N`. This means that `P` should always be equal to` (Y*100)/N`; thats why in the code above, we multiply the amount(Y) paid to the creator by 100 and divide it by the amount(N) of NFT units transferred, but notice that we convert the units of NFT to microalgos by multiplying it by 1000000 since the amount(Y) is already in microalgos
 
 
 
