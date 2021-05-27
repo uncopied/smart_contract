@@ -322,7 +322,11 @@ cat signoutNft-0.tx signoutNft-1.tx signoutNft-2.tx  > signoutNft.tx
 goal clerk rawsend -f signoutNft.tx
 ```
 
-After doing this, i get three successful transactions with ids,`FHLDGUTHLPVH3D6ODWO56OMOHI3H5YRRZMJZJNV7ZM7WOLJENHZQ`,`ORHYRYRIWSPWLDXQWROWAXAIOSGFTDJD637FLYHIHTQTEEIZO5OA`,`WSQ7XJYEEWZK754CCIN2UFUJA73K5ITXEYY6D7HELGJPNF2OUL2A`. Meaning our transactios were successful.
+After doing this, i get three successful transactions with ids,
+
+`FHLDGUTHLPVH3D6ODWO56OMOHI3H5YRRZMJZJNV7ZM7WOLJENHZQ`,`ORHYRYRIWSPWLDXQWROWAXAIOSGFTDJD637FLYHIHTQTEEIZO5OA`,`WSQ7XJYEEWZK754CCIN2UFUJA73K5ITXEYY6D7HELGJPNF2OUL2A`. 
+
+Meaning our transactios were successful.
 
 
 Up next is the second type of royalty transaction, where someone who has already bought the NFT sends it to a new buyer:
@@ -360,7 +364,11 @@ cat signoutNft-0.tx signoutNft-1.tx signoutNft-2.tx  > signoutNft.tx
 goal clerk rawsend -f signoutNft.tx
 ```
 In the example above we send 3 units of our nft, and this application(15974171) requires  5% of the units transferred to the Creator, which is 0.15 algo and equivalent to 150000 micro algos, thats why we send 150000 micro algo to the creator.
-After doing this, i get three successful transactions with ids,`53UB3X7WATGSUO5K7PIJHA6Z24WHUNAILXMKRMUKDK3HQWPIW4OQ`,`LGCNIAZMZ4F3PL2PTO2V36BEBDZTN4FBCDPCOAABDV5SSQJJOX5Q`,`5L3VCSRBJYVO7CGUWE5KDK7VID2TPH5J7AROD4UGWFWTYMF4BX3A`. Meaning our transactions were successful and our contracts work as expected.
+After doing this, i get three successful transactions with ids,
+
+`53UB3X7WATGSUO5K7PIJHA6Z24WHUNAILXMKRMUKDK3HQWPIW4OQ`,`LGCNIAZMZ4F3PL2PTO2V36BEBDZTN4FBCDPCOAABDV5SSQJJOX5Q`,`5L3VCSRBJYVO7CGUWE5KDK7VID2TPH5J7AROD4UGWFWTYMF4BX3A`. 
+
+Meaning our transactions were successful and our contracts work as expected.
 
 
 Please note that this is not the final state of this program as more coditions will be added but this should be the basis of it and if this changes, this docs will be updated accordinngly.
