@@ -22,8 +22,8 @@ gtxn 0 AssetSender
 bnz txSentFromCreator
 
 global GroupSize
-int 3
->=
+int 4
+==
 byte "Creator"
 app_global_get
 gtxn 0 Receiver
@@ -33,9 +33,7 @@ gtxn 0 Amount
 int 100
 *
 store 10
-gtxn 1 AssetAmount
-int 1000000
-*
+gtxn 3 Amount
 store 11
 load 10
 load 11
@@ -46,17 +44,17 @@ app_global_get
 &&
 return
 
-
-
 txSentFromCreator:
 global GroupSize
 int 3
->=
+==
 byte "Price"
 app_global_get
-gtxn 0 AssetAmount
-*
 gtxn 1 Amount
+==
+&&
+gtxn 0 AssetAmount
+int 1 
 ==
 &&
 byte "Creator"

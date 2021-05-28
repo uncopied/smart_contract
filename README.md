@@ -12,7 +12,7 @@ The purpose of this contract is to enable royalty transactions for Uncopied and 
 - Atomic transactions are transactions that are grouped together such that if one fails, all fail.
 
 # How do we achieve this?
-We are going to solve this particular problem using an Atomic transaction that contains three transactions but first, it is good that you understand that there are two types of royalty transactions in  our case :
+We are going to solve this particular problem using an Atomic transaction that contains three transactions and another that contains four transactions, but first, it is good that you understand that there are two types of royalty transactions in  our case :
 1. A creator selling his NFT to a buyer.
 2. A buyer giving or selling his NFT to a new Buyer
 
@@ -28,6 +28,7 @@ We are going to solve this particular problem using an Atomic transaction that c
 1. The first transaction sends the royalties to the creator
 2. The second transaction sends the NFT to the new buyer.
 3. The third transaction is a call to the stateful smart contract
+4. The fourth transaction is the transaction where the new buyer pays the previous buyer for the NFT.
 
 # Order Of Transactions For A Royalty Transaction To Take Place
 - An atomic transaction that creates an asset with default frozen true and also a stateful smart contract which stores the price of a single unit of the NFT, the percentage gain on any transfer of this NFT along with the address of the creator
@@ -134,12 +135,14 @@ For you to understand the code above, you need to remember that we have two kind
 txSentFromCreator:
 global GroupSize
 int 3
->=
+==
 byte "Price"
 app_global_get
-gtxn 0 AssetAmount
-*
 gtxn 1 Amount
+==
+&&
+gtxn 0 AssetAmount
+int 1 
 ==
 &&
 byte "Creator"
@@ -154,14 +157,14 @@ gtxn 0 AssetSender
 return
 
 ```
-The first three lines make sure that this transaction is being called along with at least two other transactions, the next four lines gets the price of this stateful smart contract that was stored during creation and compares it with the amount the buyer wants to pay the creator in the second transaction, the next four lines make sure that the sender of the asset in the first transaction is the same as the the creator of the contract that was stored when the contract was created. The next lines make sure that the receiver of in the second transaction is equal to the sender in the first transaction. Notice the return statement at the end, this is so that our code does not drop into the creation branch again when it is being called
+The first three lines make sure that this transaction is being called along with at least two other transactions, the next four lines gets the price of this stateful smart contract that was stored during creation and compares it with the amount the buyer wants to pay the creator in the second transaction, the next three lines make sure its  a single unit of this asset that is being transferred, and the next four lines make sure that the sender of the asset in the first transaction is the same as the the creator of the contract that was stored when the contract was created. The next lines make sure that the receiver of in the second transaction is equal to the sender in the first transaction. Notice the return statement at the end, this is so that our code does not drop into the creation branch again when it is being called
 
 Lets look at the code after our `bnz txSentFromCreator` line, this will be the case if the creator is not the one sending the asset meaning the asset is being set from someone who has bought the nft to another person, which is our second [case](#A-buyer-transferring-his-NFT)
 
 ```TEAL
 global GroupSize
-int 3
->=
+int 4
+==
 byte "Creator"
 app_global_get
 gtxn 0 Receiver
@@ -171,9 +174,7 @@ gtxn 0 Amount
 int 100
 *
 store 10
-gtxn 1 AssetAmount
-int 1000000
-*
+gtxn 3 Amount
 store 11
 load 10
 load 11
@@ -187,9 +188,9 @@ return
 ```
 
 
-We first make sure that the transactions are at least 3, then we check that the creator of the NFT is the receiver in the first transaction, we further take the amount in the first transaction, multipky it by 100 and divide it by the asset amount multiplied by 1000000 then check if its equal to the percent set by the creator and allow the contract call if this is the case or reject the transaction.
+We first make sure that there are at least 4 transactions, then we check that the creator of the NFT is the receiver in the first transaction, we further take the amount in the first transaction, multipky it by 100 and divide it by the amount the new buyer is paying for it, then check if its equal to the percent set by the creator and allow the contract call to take place if this is the case or reject the transaction.
 
-A simple clarification: suppose a creator sets `P` as the royalties percent he will receive on a transfer of a single unit of an NFT `N` then the function f(N) that a buyer should pay to the Creator when transferring an assset is `(P/100)*N`, lets call f(N) `Y` in our case, this means `Y = (P/100)*N`. This means that `P` should always be equal to` (Y*100)/N`; thats why in the code above, we multiply the amount(Y) paid to the creator by 100 and divide it by the amount(N) of NFT units transferred, but notice that we convert the units of NFT to microalgos by multiplying it by 1000000 since the amount(Y) is already in microalgos
+A simple clarification: suppose a creator sets `P` as the royalties percent he will receive on a transfer of a single unit of an NFT at a variable price `A` then the function f(A) that a buyer should pay to the Creator when transferring an assset is `(P/100)*A`, lets call f(A) `Y` in our case, this means `Y = (P/100)*A`. This means that `P` should always be equal to` (Y*100)/A`; thats why in the code above, we multiply the amount(Y) paid to the creator by 100 and divide it by the amount(A) that the new buyer is willing to pay for the NFT.
 
 
 
@@ -250,13 +251,13 @@ cat signout-0.tx signout-1.tx  > signout.tx
 goal clerk rawsend -f signout.tx
 ```
 
-When i run the commands above on my PC presently,  the atomic transaction is successful with the following transaction IDs `YKDNNJ2GJQGVM7H4WQDRV5GYYW43DYAWT3ASRPBIRKKKAEJVK6HQ`,`QTNJ3YF2SDVFFU25DMD5ZDZHB4MC76DWBTCTPTOP6IDL4E5TQFEA`
+When i run the commands above on my PC presently,  the atomic transaction is successful with the following transaction IDs `Q7NRICFGOME4R3SY465Y7Y62LECSYLGR4PF5MJ2XK54QFA56RWEA`,`MAZ7FBB2LVZFPZKNSOYFHX6SZ6HW7WUMLPKUOC2AKLQLQVG2LXCQ`
 
 When i inspeact both opf them on testnet.algoexplorer.io, i find out the following information
 
-Asset Id:  15974170
+Asset Id:  15976209
 
-Application Id : 15974171
+Application Id : 15976210
 
 
 2. A compilation of a stateless smartcontract which includes the application id of the stateful smart contract, this will give us an address.
@@ -267,7 +268,7 @@ So now, replace the application id in the uncopied.teal file with the one above(
 goal clerk compile ./uncopied.teal
 ```
 
-when i run the command above, i get `DSGXLVOW7ZBNNJZACQVF4CYTVCI2NVW5LVRN2CXOQ6C2TPNZMYAXZS3NTI` as the address.
+when i run the command above, i get `ICQFYYDKNB6LHNLBMNWDLJBRR67ZJOBA6WEPAXZZHPIDCHMFOSL2XOSYXQ` as the address.
 
 3. Funding the stateless smart contract address
 you can fund the address on https://bank.testnet.algorand.network/
@@ -277,11 +278,11 @@ you can fund the address on https://bank.testnet.algorand.network/
 Make sure to paass in the right clawback address and the asset id
 
 ```bash
-goal asset config --manager GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI  --new-clawback  DSGXLVOW7ZBNNJZACQVF4CYTVCI2NVW5LVRN2CXOQ6C2TPNZMYAXZS3NTI --assetid 15974170     
- 
+goal asset config --manager GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI  --new-clawback  ICQFYYDKNB6LHNLBMNWDLJBRR67ZJOBA6WEPAXZZHPIDCHMFOSL2XOSYXQ --assetid 15976209     
+
 ```
 
-When i do this, i get a successful transaction with a transaction id of `I63OIPLBE5FAJNQIWW5IYOCJ7IANUKEY2ZRN7T6V4NQAZZCQRRLQ`, feel free to inspect this id on https://testnet.algoexplorer.io/
+When i do this, i get a successful transaction with a transaction id of `O7ULQ3WZBCWPFJGNVFK6O6H5BTXMWRMNXRYABFTQ6EG6HWRBWJ2A`, feel free to inspect this id on https://testnet.algoexplorer.io/
 
 
 5. Performing an opt in transaction to opt the buyer of the NFT(asset) into the asset.
@@ -290,19 +291,19 @@ Next, we need to opt in the acccount of the  buyer so he can receive the NFTs.
 ```bash
 
 
-goal asset send -a 0 -f ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA -t ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA   --assetid 15974170  
+goal asset send -a 0 -f ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA -t ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA   --assetid 15976209  
 ```
 
-After running this, i get a transaction with the following id `STMXJHWXG7Q6FDIIM7R5APBD26ZMAM7NMI3K7OCCR266MFSWAJQQ`,feel free to inspect this id on https://testnet.algoexplorer.io/
+After running this, i get a transaction with the following id `GA5CXWNPFOESYOPFQB6JRHGAC2I57H7QKMRTDWUN3B3F73G4CXFQ`,feel free to inspect this id on https://testnet.algoexplorer.io/
 
 6. An atomic transaction grouping the 3  transactions described earlier together in order to have a successful transaction. This is the final transaction where the buyer receives his NFT and the Creator receives his royalty in algo. Make sure to use the right asset id,application id and clawback address where necessary.
 
 ```bash
-goal asset send --amount 6 --assetid 15974170      --from GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --to ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --clawback  DSGXLVOW7ZBNNJZACQVF4CYTVCI2NVW5LVRN2CXOQ6C2TPNZMYAXZS3NTI  --out unsignedAssetSend.tx
+goal asset send --amount 1 --assetid 15976209      --from GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --to ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --clawback  ICQFYYDKNB6LHNLBMNWDLJBRR67ZJOBA6WEPAXZZHPIDCHMFOSL2XOSYXQ  --out unsignedAssetSend.tx
 
-goal clerk send --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --to GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --amount=1200 --out unsignedSend.tx
+goal clerk send --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --to GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --amount 200 --out unsignedSend.tx
 
-goal app call --from GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --app-id 15974171 --out unsignedPriceCall.tx
+goal app call --from GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --app-id 15976210 --out unsignedPriceCall.tx
 
 cat  unsignedAssetSend.tx unsignedSend.tx unsignedPriceCall.tx > combinedNftTransactions.tx
 
@@ -324,9 +325,9 @@ goal clerk rawsend -f signoutNft.tx
 
 After doing this, i get three successful transactions with ids,
 
-`FHLDGUTHLPVH3D6ODWO56OMOHI3H5YRRZMJZJNV7ZM7WOLJENHZQ`,`ORHYRYRIWSPWLDXQWROWAXAIOSGFTDJD637FLYHIHTQTEEIZO5OA`,`WSQ7XJYEEWZK754CCIN2UFUJA73K5ITXEYY6D7HELGJPNF2OUL2A`. 
+`NVFEU6JNH75FZQP225XZ2BWBLZ5XSWL7QSDQLHGA6WTRYGR5Q7PA`,`55BLHPRPPIC6ATSEK3BYGXDBX76AXRX37WJCC3N67O44SGU6DUZA`,`ZZUFQZRLFQY4ZNEQS2MMYJUIUUDRM2IO5ORZ5BNMVAJQHM5O4DSQ`. 
 
-Meaning our transactios were successful.
+Meaning our transactions were successful.
 
 
 Up next is the second type of royalty transaction, where someone who has already bought the NFT sends it to a new buyer:
@@ -340,13 +341,16 @@ I get a successful transaction with the transaction id : `BRN36EU7YQCXSJAK6QT6OH
 
 Then we can send the new buyer the NFT while also sending the percent of the amount transferred to the Creator :
 ```bash
-goal clerk send --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --to GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --amount=150000 --out unsignedSend.tx
 
-goal asset send --amount 3 --assetid 15974170      --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --to XHFRWIODL7MFJNCWURZY6USPIWUZTQ2X6EWCJ7SWSRKJPUN4LYHO5XK2BY --clawback  DSGXLVOW7ZBNNJZACQVF4CYTVCI2NVW5LVRN2CXOQ6C2TPNZMYAXZS3NTI  --out unsignedAssetSend.tx
+goal clerk send --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --to GJ2KFYI723EMIS76SNSG3TKHDSW7322AZZJXJNV3J35B4TIQVXFXJLB3PI --amount=400000 --out unsignedSend.tx
 
-goal app call --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --app-id 15974171 --out unsignedPriceCall.tx
+goal asset send --amount 1 --assetid 15976209      --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --to XHFRWIODL7MFJNCWURZY6USPIWUZTQ2X6EWCJ7SWSRKJPUN4LYHO5XK2BY --clawback  ICQFYYDKNB6LHNLBMNWDLJBRR67ZJOBA6WEPAXZZHPIDCHMFOSL2XOSYXQ  --out unsignedAssetSend.tx
 
-cat  unsignedSend.tx unsignedAssetSend.tx  unsignedPriceCall.tx > combinedNftTransactions.tx
+goal app call --from ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --app-id 15976210 --out unsignedPriceCall.tx
+
+goal clerk send --from XHFRWIODL7MFJNCWURZY6USPIWUZTQ2X6EWCJ7SWSRKJPUN4LYHO5XK2BY --to ZIJ5DOBG3GBMRJ7CGRQENUK5Z746YXEPAATYPFRKIU3WSMEWTJJ43DOMVA --amount=8000000 --out unsignedSend1.tx
+
+cat  unsignedSend.tx unsignedAssetSend.tx  unsignedPriceCall.tx unsignedSend1.tx> combinedNftTransactions.tx
 
 
 goal clerk group -i combinedNftTransactions.tx -o groupedNftTransactions.tx 
@@ -359,14 +363,18 @@ goal clerk sign -i splitNft-0.tx -o signoutNft-0.tx
 
 goal clerk sign -i splitNft-2.tx -o signoutNft-2.tx
 
-cat signoutNft-0.tx signoutNft-1.tx signoutNft-2.tx  > signoutNft.tx
+goal clerk sign -i splitNft-3.tx -o signoutNft-3.tx
+
+cat signoutNft-0.tx signoutNft-1.tx signoutNft-2.tx signoutNft-3.tx > signoutNft.tx
 
 goal clerk rawsend -f signoutNft.tx
+
+
 ```
 In the example above we send 3 units of our nft, and this application(15974171) requires  5% of the units transferred to the Creator, which is 0.15 algo and equivalent to 150000 micro algos, thats why we send 150000 micro algo to the creator.
 After doing this, i get three successful transactions with ids,
 
-`53UB3X7WATGSUO5K7PIJHA6Z24WHUNAILXMKRMUKDK3HQWPIW4OQ`,`LGCNIAZMZ4F3PL2PTO2V36BEBDZTN4FBCDPCOAABDV5SSQJJOX5Q`,`5L3VCSRBJYVO7CGUWE5KDK7VID2TPH5J7AROD4UGWFWTYMF4BX3A`. 
+`3IYXCSI52UIYHUE6N3FY7IV23E4UQKQN3MXB4SRXBXMBLCSLFGUA`,`C45KBKU3D4XYHPSRGLI2NR3EBHN5GQC2NNQV3UJD3MULXXG3QU4A`,`WUXNXQV3ONGYIE4IXAMI2HTI3IZZEOWRORP64BRDVCSIRQXT6UPQ`,`4NECDEJIW7HRQT7HNXJYIHTM3F5LWKJNSDDWN2PQZYQSJXSTMKNA`. 
 
 Meaning our transactions were successful and our contracts work as expected.
 

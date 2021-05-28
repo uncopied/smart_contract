@@ -1,7 +1,43 @@
 #pragma version 3
+gtxn 0 RekeyTo
+global ZeroAddress
+==
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+gtxn 2 RekeyTo
+global ZeroAddress
+==
+&&
+gtxn 0 CloseRemainderTo
+global ZeroAddress
+==
+&& 
+gtxn 1 CloseRemainderTo
+global ZeroAddress
+==
+&& 
+gtxn 2 CloseRemainderTo
+global ZeroAddress
+==
+&& 
+gtxn 0 AssetCloseTo
+global ZeroAddress
+==
+&&
+gtxn 1 AssetCloseTo
+global ZeroAddress
+==
+&&
+gtxn 2 AssetCloseTo
+global ZeroAddress
+==
+&&
 txn Fee
 int 10000
 <=
+&&
 global GroupSize
 int 3
 >=
@@ -11,6 +47,6 @@ int appl
 ==
 &&
 gtxn 2 ApplicationID
-int 15974171
+int 15976210
 ==
 &&
