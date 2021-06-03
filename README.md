@@ -1,4 +1,4 @@
-# Uncopied Smart Contract (Royalties)
+# Smart Contract to manage NFT Royalties
 This is an explanation of the smart contract PROTOTYPE for the Uncopied project. Uncopied intends to issue secure 'proof of provenance' for physical and digital art (NFTs). UNCOPIED's vision is to make original art truly unique, with physical and digitally immutable certificates of authenticity, expertise and inventory that will outlive us. The NFTs can be traded on any Algorand NFT marketplace (DEX) based on agreed standards for asset identification and metadata. This prototype is to explore how we can manage royalties ("Droit de Suite") on initial NFT transaction, but also on all future transactions. 
 
 THIS IS NOT PRODUCTION-READY.
