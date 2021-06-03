@@ -1,8 +1,18 @@
 # Uncopied Smart Contract (Royalties)
-This is an explanation of the smart contract PROTOTYPE for the Uncopied project. Uncopied intends to issue secure 'proof of provenance' for physical and digital art (NFTs). UNCOPIED's vision is to make original art truly unique, with physical and digitally immutable certificates of authenticity, expertise and inventory that will outlive us. The NFTs can be traded on any Algorand NFT marketplace (DEX) based on agreed standards for asset identification and metadata. This prototype is to explore how we can manage royalties ("Droit de Suite") on initial NFT transaction, but also on all future transactions. THIS IS NOT PRODUCTION-READY.
+This is an explanation of the smart contract PROTOTYPE for the Uncopied project. Uncopied intends to issue secure 'proof of provenance' for physical and digital art (NFTs). UNCOPIED's vision is to make original art truly unique, with physical and digitally immutable certificates of authenticity, expertise and inventory that will outlive us. The NFTs can be traded on any Algorand NFT marketplace (DEX) based on agreed standards for asset identification and metadata. This prototype is to explore how we can manage royalties ("Droit de Suite") on initial NFT transaction, but also on all future transactions. 
+
+THIS IS NOT PRODUCTION-READY.
+
+Also, please note that Uncopied.Art is neither an online art shop, nor a market place / DEX. Uncopied assets represent an immutable proof of provenance for a physical or digital object, as such they are non-tradable and inalienable. Learn more about Uncopied here https://uncopied.art/
+
+Uncopied ASA != Tradable NFT
 
 # What does this contract Achieve
 The purpose of this contract is to enable royalty transactions for Uncopied and to also guide the creation of NFTs, for this purpose, the Algorand blockchain and the TEAL(Transaction Execution Approval Language) has been chosen as the desired Blockchain and smart contract language.
+
+## Algorand examples or tutorials used as a reference
+-  Jason Weathersby, Algorand (https://developer.algorand.org/solutions/assets-and-custom-transfer-logic/)
+- AlgoRealm, a NFT Royalty Game by Cosimo Bassi, Algorand (https://developer.algorand.org/solutions/algorealm-nft-royalty-game/)
 
 # Things to understand before proceeding
 - A royalty transaction is a transaction that allows a creator of a content to be rewarded for his content by a buyer of such content, in our case, the content is the NFT.
