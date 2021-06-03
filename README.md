@@ -11,7 +11,7 @@ Uncopied ASA != Tradable NFT
 The purpose of this contract is to enable royalty transactions for Uncopied and to also guide the creation of NFTs, for this purpose, the Algorand blockchain and the TEAL(Transaction Execution Approval Language) has been chosen as the desired Blockchain and smart contract language.
 
 ## Algorand examples or tutorials used as a reference
--  Jason Weathersby, Algorand (https://developer.algorand.org/solutions/assets-and-custom-transfer-logic/)
+- Assets and Custom Transfer Logic by Jason Weathersby, Algorand (https://developer.algorand.org/solutions/assets-and-custom-transfer-logic/)
 - AlgoRealm, a NFT Royalty Game by Cosimo Bassi, Algorand (https://developer.algorand.org/solutions/algorealm-nft-royalty-game/)
 
 # Things to understand before proceeding
